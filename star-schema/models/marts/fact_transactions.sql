@@ -3,8 +3,9 @@ SELECT
     t.transaction_id,
     dc.customer_key,
     da.account_key,
-    dd.date_key,
     dm.merchant_key,
+    t.merchant_name,
+    t.merchant_category,
     t.transaction_type,
     t.status,
     t.amount,
@@ -22,6 +23,6 @@ SELECT
 FROM {{ source('raw', 'raw_transactions') }} t
 LEFT JOIN {{ ref('dim_customer') }} dc ON t.customer_id = dc.customer_id
 LEFT JOIN {{ ref('dim_account') }} da ON t.account_id = da.account_id
-LEFT JOIN {{ ref('dim_date') }} dd ON DATE(t.created_at) = dd.date
 LEFT JOIN {{ ref('dim_merchant') }} dm 
     ON CONCAT(COALESCE(t.merchant_name, 'Unknown'), '|', COALESCE(t.merchant_category, 'other')) = dm.merchant_key
+WHERE DATE(t.created_at) <= CURRENT_DATE()

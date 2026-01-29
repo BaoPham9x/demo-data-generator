@@ -2,9 +2,8 @@
 SELECT
     r.risk_event_id,
     dc.customer_key,
-    dt.transaction_key,
+    r.transaction_id,
     da.account_key,
-    dd.date_key,
     dr.risk_event_type_key,
     r.severity,
     r.status,
@@ -18,7 +17,7 @@ SELECT
     r.description
 FROM {{ source('raw', 'raw_risk_events') }} r
 LEFT JOIN {{ ref('dim_customer') }} dc ON r.customer_id = dc.customer_id
-LEFT JOIN {{ ref('dim_date') }} dd ON DATE(r.created_at) = dd.date
 LEFT JOIN {{ ref('dim_risk_event_type') }} dr ON r.event_type = dr.risk_event_type_key
 LEFT JOIN {{ ref('fact_transactions') }} dt ON r.transaction_id = dt.transaction_id
 LEFT JOIN {{ ref('dim_account') }} da ON r.account_id = da.account_id
+WHERE DATE(r.created_at) <= CURRENT_DATE()

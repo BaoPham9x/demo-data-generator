@@ -72,8 +72,8 @@ module:
         - "dim_customer.customer_tier"
   joinPaths:
     - from:
-        column: "customer_id"
+        column: "customer_key"
       to:
         table: "dim_customer"
-        column: "customer_id"
+        column: "customer_key"
       type: "many-to-one"

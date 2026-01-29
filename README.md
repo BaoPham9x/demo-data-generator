@@ -31,7 +31,7 @@ demo-data-generator/
 ## Workflow
 
 1. **Generate** → `deno task generate` (creates CSVs)
-2. **Load to BigQuery** → Upload CSVs to `demo_raw` dataset
+2. **Load to BigQuery** → Manually upload CSVs to `demo_raw` dataset
 3. **Transform** → Run `dbt run` in `star-schema/` (creates star schema)
 4. **Semantic Layer** → Use Steep modules in `modules/` (references star schema)
 
