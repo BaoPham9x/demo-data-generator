@@ -74,4 +74,4 @@ module:
       to:
         table: "dim_customer"
         column: "customer_key"
-      type: "many-to-one"
+      type: "one-to-many"

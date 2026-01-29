@@ -8,13 +8,13 @@ module:
       to:
         table: "dim_customer"
         column: "customer_key"
-      type: "many-to-one"
+      type: "one-to-many"
     - from:
         column: "transaction_id"
       to:
         table: "fact_transactions"
         column: "transaction_id"
-      type: "many-to-one"
+      type: "one-to-many"
   dimensions:
     - column: "event_type"
       type: "categorical"

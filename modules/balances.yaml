@@ -8,7 +8,7 @@ module:
       to:
         table: "dim_account"
         column: "account_key"
-      type: "many-to-one"
+      type: "one-to-many"
   dimensions:
     - column: "currency"
       type: "categorical"
