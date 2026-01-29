@@ -1,0 +1,15 @@
+# Config files with secrets
+config.json
+
+# Output files
+output/
+
+# Deno
+.deno/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store

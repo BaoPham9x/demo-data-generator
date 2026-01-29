@@ -1,0 +1,2 @@
+# dbt models go here
+# Transform raw tables → star schema (dim_customer, fact_transactions, etc.)

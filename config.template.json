@@ -1,0 +1,8 @@
+{
+  "BigQuery": {
+    "projectId": "your-project-id",
+    "clientEmail": "service-account@project.iam.gserviceaccount.com",
+    "privateKey": "-----BEGIN PRIVATE KEY-----\nYOUR_PRIVATE_KEY\n-----END PRIVATE KEY-----\n",
+    "dataset": "demo_raw"
+  }
+}

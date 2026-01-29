@@ -1,0 +1,14 @@
+{
+  "tasks": {
+    "generate": "deno run --allow-write --allow-read --allow-env src/generate.ts",
+    "sample": "deno run --allow-write --allow-read --allow-env src/generate_sample.ts",
+    "clean": "rm -rf output/"
+  },
+  "imports": {
+    "@google-cloud/bigquery": "npm:@google-cloud/bigquery@^7.9.1",
+    "@std/csv": "jsr:@std/csv@^1.0.0",
+    "d3-random": "npm:d3-random@^3.0.1",
+    "d3-time": "npm:d3-time@^3.1.0",
+    "nanoid": "npm:nanoid@^5.0.9"
+  }
+}
