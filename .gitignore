@@ -1,15 +1,25 @@
-# Config files with secrets
-config.json
-
 # Output files
 output/
+*.csv
 
 # Deno
 .deno/
+deno.lock
+
+# dbt
+star-schema/target/
+star-schema/dbt_packages/
+star-schema/profiles.yml
 
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
 
 # OS
 .DS_Store
+Thumbs.db
+
+# Config (contains secrets)
+config.json
