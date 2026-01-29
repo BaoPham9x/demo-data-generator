@@ -1,6 +1,7 @@
 -- Fact: Transactions
 SELECT
     t.transaction_id,
+    t.customer_id,
     dc.customer_key,
     da.account_key,
     dm.merchant_key,

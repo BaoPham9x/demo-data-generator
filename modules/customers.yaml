@@ -112,6 +112,15 @@ module:
       dimensions:
         - "country"
         - "customer_tier"
+    - identifier: "registrations"
+      name: "Registrations"
+      time: "dim_customer.created_at"
+      description: "Total number of user sign-ups."
+      calculation: "count"
+      category: "Marketing"
+      dimensions:
+        - "country"
+        - "email"
   joinPaths:
     - from:
         column: "customer_key"
