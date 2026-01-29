@@ -9,6 +9,12 @@ module:
         table: "dim_account"
         column: "account_key"
       type: "one-to-many"
+    - from:
+        column: "customer_key"
+      to:
+        table: "dim_customer"
+        column: "customer_key"
+      type: "one-to-many"
   dimensions:
     - column: "currency"
       type: "categorical"
