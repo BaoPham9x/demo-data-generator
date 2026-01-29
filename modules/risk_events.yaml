@@ -1,6 +1,6 @@
 module:
   identifier: "risk_events"
-  schema: "demo_fintech"
+  schema: "steep_demo_fintech"
   table: "fact_risk_events"
   joinPaths:
     - from:

@@ -1,6 +1,6 @@
 module:
   identifier: "balances"
-  schema: "demo_fintech"
+  schema: "steep_demo_fintech"
   table: "fact_balances"
   joinPaths:
     - from:

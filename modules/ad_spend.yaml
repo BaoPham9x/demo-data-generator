@@ -1,6 +1,6 @@
 module:
   identifier: "ad_spend"
-  schema: "demo_fintech"
+  schema: "steep_demo_fintech"
   table: "fact_ad_spend"
   dimensions:
     - column: "network"

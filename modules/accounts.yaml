@@ -1,6 +1,6 @@
 module:
   identifier: "accounts"
-  schema: "demo_fintech"
+  schema: "steep_demo_fintech"
   table: "dim_account"
   dimensions:
     - column: "account_type"

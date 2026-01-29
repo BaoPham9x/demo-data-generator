@@ -1,6 +1,6 @@
 module:
   identifier: "customers"
-  schema: "demo_fintech"
+  schema: "steep_demo_fintech"
   table: "dim_customer"
   dimensions:
     - column: "country"

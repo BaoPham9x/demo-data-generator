@@ -1,6 +1,6 @@
 module:
   identifier: "transactions"
-  schema: "demo_fintech"
+  schema: "steep_demo_fintech"
   table: "fact_transactions"
   joinPaths:
     - from:

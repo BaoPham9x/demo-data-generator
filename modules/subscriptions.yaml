@@ -1,6 +1,6 @@
 module:
   identifier: "subscriptions"
-  schema: "demo_fintech"
+  schema: "steep_demo_fintech"
   table: "fact_subscriptions"
   dimensions:
     - column: "plan_name"
