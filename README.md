@@ -37,7 +37,19 @@ demo-data-generator/
 
 ## Remake Everything
 
+**What `clean` does:** Deletes local CSV files in `./output/` directory (does NOT touch BigQuery)
+
+**To remake everything:**
 ```bash
+# 1. Clean local CSVs and regenerate
 deno task clean && deno task generate
-# Then reload BigQuery, run dbt, update Steep
+
+# 2. Manually reload to BigQuery (delete old tables, upload new CSVs)
+
+# 3. Manually run dbt
+cd star-schema && dbt run
+
+# 4. Steep modules stay the same (no update needed)
 ```
+
+**Note:** Since you manually upload to BigQuery, you need to manually delete/reload tables there too.

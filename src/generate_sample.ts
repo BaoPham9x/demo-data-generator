@@ -16,6 +16,10 @@ import { generateTransactions } from "./models/fintech/raw_transactions.ts";
 import { transactionsToCsv } from "./models/fintech/raw_transactions.ts";
 import { generateAdSpend } from "./models/fintech/raw_ad_spend.ts";
 import { adSpendToCsv } from "./models/fintech/raw_ad_spend.ts";
+import { generateAccountBalances } from "./models/fintech/raw_balances.ts";
+import { balancesToCsv } from "./models/fintech/raw_balances.ts";
+import { generateRiskEvents } from "./models/fintech/raw_risk_events.ts";
+import { riskEventsToCsv } from "./models/fintech/raw_risk_events.ts";
 import { randomDateBetween, randomAccountCount } from "./lib/random.ts";
 import type { RawAccount } from "./models/fintech/raw_accounts.ts";
 
@@ -119,7 +123,35 @@ if (import.meta.main) {
     console.log("💾 Saved sample_raw_customer_features.csv");
     console.log("");
     
-    // Step 5: Generate transactions (limited for sample)
+    // Step 5: Generate balances (limited for sample - just last 30 days per account)
+    console.log("📝 Generating balance snapshots (last 30 days per account)...");
+    const balances = [];
+    for (const account of accounts) {
+      const accountCreatedAt = new Date(account.created_at);
+      // Only generate last 30 days for sample
+      const balanceStartDate = new Date(endDate);
+      balanceStartDate.setDate(balanceStartDate.getDate() - 30);
+      const actualStart = accountCreatedAt > balanceStartDate ? accountCreatedAt : balanceStartDate;
+      
+      const accountBalances = generateAccountBalances(
+        account.account_id,
+        actualStart,
+        account.currency,
+        account.current_balance,
+        endDate
+      );
+      balances.push(...accountBalances);
+    }
+    console.log(`✅ Generated ${balances.length} balance snapshots`);
+    
+    Deno.writeTextFileSync(
+      getOutputPath("sample_raw_balances"),
+      balancesToCsv(balances)
+    );
+    console.log("💾 Saved sample_raw_balances.csv");
+    console.log("");
+    
+    // Step 6: Generate transactions (limited for sample)
     console.log("📝 Generating transactions (limited for sample)...");
     const transactions = [];
     const accountsByCustomer = new Map<string, RawAccount[]>();
@@ -165,7 +197,38 @@ if (import.meta.main) {
     console.log("💾 Saved sample_raw_transactions.csv");
     console.log("");
     
-    // Step 6: Generate ad spend (just 1 month for sample)
+    // Step 7: Generate risk events (limited for sample)
+    console.log("📝 Generating risk events (limited for sample)...");
+    const riskEvents = generateRiskEvents(
+      customers.map(c => ({
+        customer_id: c.customer_id,
+        created_at: c.created_at,
+        risk_score: c.risk_score,
+      })),
+      transactions.map(t => ({
+        transaction_id: t.transaction_id,
+        customer_id: t.customer_id,
+        account_id: t.account_id,
+        created_at: t.created_at,
+        risk_flag: t.risk_flag,
+      })),
+      accounts.map(a => ({
+        account_id: a.account_id,
+        customer_id: a.customer_id,
+      })),
+      startDate,
+      endDate
+    );
+    console.log(`✅ Generated ${riskEvents.length} risk events`);
+    
+    Deno.writeTextFileSync(
+      getOutputPath("sample_raw_risk_events"),
+      riskEventsToCsv(riskEvents)
+    );
+    console.log("💾 Saved sample_raw_risk_events.csv");
+    console.log("");
+    
+    // Step 8: Generate ad spend (just 1 month for sample)
     console.log("📝 Generating ad spend (1 month sample)...");
     const sampleStartDate = new Date("2024-01-01");
     const sampleEndDate = new Date("2024-01-31");
@@ -187,7 +250,9 @@ if (import.meta.main) {
     console.log(`   - ${accounts.length} accounts`);
     console.log(`   - ${subscriptions.length} subscriptions`);
     console.log(`   - ${customerFeatures.length} customer features`);
+    console.log(`   - ${balances.length} balance snapshots`);
     console.log(`   - ${transactions.length} transactions`);
+    console.log(`   - ${riskEvents.length} risk events`);
     console.log(`   - ${adSpend.length} ad spend records`);
     console.log("");
     console.log("💡 Tip: Open these CSV files in Excel/Sheets to see the data structure!");
