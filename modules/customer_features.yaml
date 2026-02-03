@@ -16,7 +16,7 @@ module:
     - identifier: "unique_customers_with_features"
       name: "Customers with Features"
       time: "fact_customer_features.activated_at"
-      description: "Count of unique customers who have activated and are using at least one product feature. This shows feature adoption and how many customers are engaging with your product beyond basic usage."
+      description: "Count of unique customers who have activated and are using at least one product feature. This shows feature adoption and how many customers are engaging with our product beyond basic usage."
       calculation: "count"
       category: "Product"
       dimensions:
@@ -30,7 +30,7 @@ module:
     - identifier: "feature_adoption_rate"
       name: "Feature Adoption Rate"
       time: "fact_customer_features.activated_at"
-      description: "The percentage of all customers who have activated at least one product feature. This measures how well customers are discovering and using your product features. Higher adoption typically indicates better product engagement."
+      description: "The percentage of all customers who have activated at least one product feature. This measures how well customers are discovering and using our product features. Higher adoption typically indicates better product engagement."
       calculation: "custom-ratio"
       numerator_sql: "COUNT(DISTINCT fact_customer_features.customer_key)"
       denominator_sql: "COUNT(dim_customer.customer_id)"

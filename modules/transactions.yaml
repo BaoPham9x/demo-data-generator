@@ -46,7 +46,7 @@ module:
     - identifier: "avg_transaction_amount"
       name: "Avg Transaction Amount"
       time: "fact_transactions.created_at"
-      description: "The average dollar amount per completed transaction. This helps you understand typical transaction sizes and customer spending patterns."
+      description: "The average dollar amount per completed transaction. This helps us understand typical transaction sizes and customer spending patterns."
       calculation: "custom-ratio"
       numerator_sql: "SUM(fact_transactions.amount)"
       denominator_sql: "COUNT(*)"
@@ -66,7 +66,7 @@ module:
     - identifier: "completed_transactions"
       name: "Completed Transactions"
       time: "fact_transactions.created_at"
-      description: "Count of transactions that were successfully processed and completed. This is your primary success metric for payment processing."
+      description: "Count of transactions that were successfully processed and completed. This is our primary success metric for payment processing."
       calculation: "count"
       filters:
         - column: "status"
@@ -93,7 +93,7 @@ module:
     - identifier: "high_risk_transactions"
       name: "High Risk Transactions"
       time: "fact_transactions.created_at"
-      description: "Count of transactions flagged by your risk system as potentially fraudulent, suspicious, or requiring additional review. Higher numbers may indicate fraud attempts or overly strict risk rules."
+      description: "Count of transactions flagged by our risk system as potentially fraudulent, suspicious, or requiring additional review. Higher numbers may indicate fraud attempts or overly strict risk rules."
       calculation: "count"
       filters:
         - column: "risk_flag"
@@ -107,7 +107,7 @@ module:
     - identifier: "revenue"
       name: "Revenue"
       time: "fact_transactions.created_at"
-      description: "Total revenue from all completed transactions, including transaction amounts and fees. This is your primary revenue metric showing money flowing through the platform."
+      description: "Total revenue from all completed transactions, including transaction amounts and fees. This is our primary revenue metric showing money flowing through the platform."
       calculation: "sum"
       value: "fact_transactions.amount"
       filters:
@@ -133,7 +133,7 @@ module:
     - identifier: "transaction_count"
       name: "Transaction Count"
       time: "fact_transactions.created_at"
-      description: "Total count of all transactions regardless of status. This shows overall transaction volume and activity on your platform."
+      description: "Total count of all transactions regardless of status. This shows overall transaction volume and activity on our platform."
       calculation: "count"
       category: "Operations"
       dimensions:
@@ -160,7 +160,7 @@ module:
     - identifier: "transaction_volume"
       name: "Transaction Volume (TPV)"
       time: "fact_transactions.created_at"
-      description: "Total Payment Volume (TPV) - the total dollar amount of all completed transactions. This includes card payments, transfers, deposits, and withdrawals. TPV is critical because your revenue is typically a percentage of this volume."
+      description: "Total Payment Volume (TPV) - the total dollar amount of all completed transactions. This includes card payments, transfers, deposits, and withdrawals. TPV is critical because our revenue is typically a percentage of this volume."
       calculation: "sum"
       value: "fact_transactions.amount"
       owner_emails:

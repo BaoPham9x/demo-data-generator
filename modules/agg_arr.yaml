@@ -60,7 +60,7 @@ module:
     - identifier: "avg_arr_per_subscription"
       name: "Avg ARR per Subscription"
       time: "fact_agg_arr.snapshot_date"
-      description: "Average ARR contribution per active subscription. This helps understand the typical value of each subscription and can indicate if you're attracting higher-value customers over time."
+      description: "Average ARR contribution per active subscription. This helps us understand the typical value of each subscription and can indicate if we're attracting higher-value customers over time."
       calculation: "custom-ratio"
       numerator_sql: "SUM(fact_agg_arr.arr_contribution)"
       denominator_sql: "COUNT(DISTINCT fact_agg_arr.subscription_id)"

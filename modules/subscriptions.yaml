@@ -19,7 +19,7 @@ module:
     - identifier: "avg_monthly_price"
       name: "Avg Monthly Price"
       time: "fact_subscriptions.started_at"
-      description: "The average monthly subscription price across all active subscriptions. This helps you understand pricing trends and the typical revenue per subscription."
+      description: "The average monthly subscription price across all active subscriptions. This helps us understand pricing trends and the typical revenue per subscription."
       calculation: "custom-value"
       sql_expression: "AVG(fact_subscriptions.monthly_price)"
       filters:

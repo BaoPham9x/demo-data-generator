@@ -18,7 +18,7 @@ module:
     - identifier: "avg_credit_limit"
       name: "Avg Credit Limit"
       time: "dim_account.created_at"
-      description: "The average credit limit assigned to accounts. This shows typical credit limits and helps understand your credit risk exposure and customer creditworthiness."
+      description: "The average credit limit assigned to accounts. This shows typical credit limits and helps us understand our credit risk exposure and customer creditworthiness."
       calculation: "custom-value"
       sql_expression: "AVG(dim_account.credit_limit)"
       category: "Operations"
