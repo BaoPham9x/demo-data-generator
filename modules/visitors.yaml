@@ -71,6 +71,7 @@ module:
       calculation: "custom-ratio"
       numerator_sql: "SUM(fact_visitors.total_conversions)"
       denominator_sql: "SUM(fact_visitors.total_visitors)"
+      format: "percentage"
       category: "Marketing"
       dimensions:
         - "network"
@@ -94,6 +95,7 @@ module:
       calculation: "custom-ratio"
       numerator_sql: "SUM(fact_visitors.total_page_views)"
       denominator_sql: "SUM(fact_visitors.total_sessions)"
+      format: "number"
       category: "Marketing"
       dimensions:
         - "network"

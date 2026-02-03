@@ -173,3 +173,9 @@ module:
         table: "fact_transactions"
         column: "customer_key"
       type: "one-to-many"
+    - from:
+        column: "customer_key"
+      to:
+        table: "fact_agg_arr"
+        column: "customer_key"
+      type: "one-to-many"

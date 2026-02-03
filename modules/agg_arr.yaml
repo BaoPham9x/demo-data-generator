@@ -64,21 +64,9 @@ module:
       calculation: "custom-ratio"
       numerator_sql: "SUM(fact_agg_arr.arr_contribution)"
       denominator_sql: "COUNT(DISTINCT fact_agg_arr.subscription_id)"
+      format: "number"
       category: "Commercial"
       dimensions:
         - "plan_name"
         - "billing_cycle"
         - "currency"
-  joinPaths:
-    - from:
-        column: "customer_key"
-      to:
-        table: "dim_customer"
-        column: "customer_key"
-      type: "many-to-one"
-    - from:
-        column: "snapshot_date"
-      to:
-        table: "dim_date"
-        column: "date"
-      type: "many-to-one"
