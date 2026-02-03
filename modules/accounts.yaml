@@ -32,9 +32,3 @@ module:
         table: "fact_transactions"
         column: "account_key"
       type: "one-to-many"
-    - from:
-        column: "account_key"
-      to:
-        table: "fact_balances"
-        column: "account_key"
-      type: "one-to-many"
