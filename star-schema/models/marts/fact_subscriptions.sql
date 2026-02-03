@@ -8,6 +8,8 @@ SELECT
     s.currency,
     s.status,
     s.billing_cycle,
+    s.billing_paused_at,
+    s.suspended_at,
     s.mrr,
     s.arr,
     s.started_at,

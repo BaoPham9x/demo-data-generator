@@ -125,41 +125,45 @@ function generateMonthlyTargets(): TargetRow[] {
       denominator: null,
     });
     
-    // Total Ad Spend - Overall
+    // Ad Spend - Overall (changed from total_ad_spend to ad_spend)
+    // Target is randomly 90% or 120% of actual (~100k monthly base)
+    const adSpendMultiplier = Math.random() < 0.5 ? 0.9 : 1.2;
     targets.push({
       series: "Target",
-      metric: "total_ad_spend",
+      metric: "ad_spend",
       time: timeStr,
       country: null,
       currency: null,
       network: null,
-      value: Math.round(100000 * baseGrowth),
+      value: Math.round(100000 * baseGrowth * adSpendMultiplier),
       numerator: null,
       denominator: null,
     });
     
-    // Total Ad Spend - Google
+    // Ad Spend - Google
+    const googleMultiplier = Math.random() < 0.5 ? 0.9 : 1.2;
     targets.push({
       series: "Target",
-      metric: "total_ad_spend",
+      metric: "ad_spend",
       time: timeStr,
       country: null,
       currency: null,
       network: "google",
-      value: Math.round(60000 * baseGrowth),
+      value: Math.round(60000 * baseGrowth * googleMultiplier),
       numerator: null,
       denominator: null,
     });
     
-    // Total Ad Spend - Meta (Facebook)
+    // Ad Spend - Meta (Facebook)
+    const metaMultiplier = Math.random() < 0.5 ? 0.9 : 1.2;
     targets.push({
       series: "Target",
-      metric: "total_ad_spend",
+      metric: "ad_spend",
       time: timeStr,
       country: null,
       currency: null,
       network: "meta",
-      value: Math.round(40000 * baseGrowth),
+      value: Math.round(40000 * baseGrowth * metaMultiplier),
       numerator: null,
       denominator: null,
     });
@@ -216,6 +220,72 @@ function generateMonthlyTargets(): TargetRow[] {
       numerator: Math.round(60000 * successRate),
       denominator: 60000,
     });
+    
+    // Total ARR - Overall
+    // Estimated: ~2400 active subscriptions * ~$905 ARR/subscription = ~$2.17M ARR
+    // With growth: base ARR grows with customer base
+    // Target is randomly 90% or 120% of actual
+    const arrMultiplier = Math.random() < 0.5 ? 0.9 : 1.2;
+    const arrGrowth = 1 + (monthNum * 0.03); // 3% ARR growth per month
+    const baseARR = 2170000; // ~$2.17M base ARR
+    targets.push({
+      series: "Target",
+      metric: "total_arr",
+      time: timeStr,
+      country: null,
+      currency: null,
+      network: null,
+      value: Math.round(baseARR * arrGrowth * arrMultiplier),
+      numerator: null,
+      denominator: null,
+    });
+    
+    // Total ARR - US (assuming ~60% of customers are US)
+    const arrUSMultiplier = Math.random() < 0.5 ? 0.9 : 1.2;
+    targets.push({
+      series: "Target",
+      metric: "total_arr",
+      time: timeStr,
+      country: "US",
+      currency: null,
+      network: null,
+      value: Math.round(baseARR * 0.6 * arrGrowth * arrUSMultiplier),
+      numerator: null,
+      denominator: null,
+    });
+    
+    // MRR - Overall (ARR / 12)
+    // Target is randomly 90% or 120% of actual
+    const mrrMultiplier = Math.random() < 0.5 ? 0.9 : 1.2;
+    const baseMRR = baseARR / 12; // ~$181k MRR
+    targets.push({
+      series: "Target",
+      metric: "mrr",
+      time: timeStr,
+      country: null,
+      currency: null,
+      network: null,
+      value: Math.round(baseMRR * arrGrowth * mrrMultiplier),
+      numerator: null,
+      denominator: null,
+    });
+    
+    // Active Subscriptions - Overall
+    // Estimated: ~2400 active subscriptions, growing with customer base
+    // Target is randomly 90% or 120% of actual
+    const subsMultiplier = Math.random() < 0.5 ? 0.9 : 1.2;
+    const baseSubscriptions = 2400;
+    targets.push({
+      series: "Target",
+      metric: "active_subscriptions",
+      time: timeStr,
+      country: null,
+      currency: null,
+      network: null,
+      value: Math.round((baseSubscriptions + (monthNum * 20)) * subsMultiplier),
+      numerator: null,
+      denominator: null,
+    });
   }
   
   return targets;
@@ -230,5 +300,6 @@ Deno.writeTextFileSync("output/targets.csv", csv);
 console.log(`✅ Generated targets.csv with ${targets.length} rows`);
 console.log(`   - 24 months (Jan 2025 - Dec 2026)`);
 console.log(`   - Series: Target`);
-console.log(`   - Metrics: transaction_volume, revenue, total_ad_spend, total_customers, success_rate`);
+console.log(`   - Metrics: transaction_volume, revenue, ad_spend, total_customers, success_rate, total_arr, mrr, active_subscriptions`);
 console.log(`   - Dimensions: country (US, GB), network (google, meta)`);
+console.log(`   - Targets are randomly 90% or 120% of estimated actual values`);

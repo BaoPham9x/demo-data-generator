@@ -3,7 +3,21 @@
  * This generates just 10 customers to see what the data looks like
  */
 
+// @deno-types="deno:///types.d.ts"
 import { getOutputPath } from "./lib/csv.ts";
+
+// Type declarations for Deno globals
+declare const Deno: {
+  writeTextFileSync(path: string, data: string): void;
+  exit(code: number): never;
+};
+
+// Extend ImportMeta for Deno
+declare global {
+  interface ImportMeta {
+    main: boolean;
+  }
+}
 import { generateCustomer } from "./models/fintech/raw_customers.ts";
 import { customersToCsv } from "./models/fintech/raw_customers.ts";
 import { generateAccount } from "./models/fintech/raw_accounts.ts";
@@ -22,6 +36,11 @@ import { generateRiskEvents } from "./models/fintech/raw_risk_events.ts";
 import { riskEventsToCsv } from "./models/fintech/raw_risk_events.ts";
 import { randomDateBetween, randomAccountCount } from "./lib/random.ts";
 import type { RawAccount } from "./models/fintech/raw_accounts.ts";
+import type { RawCustomer } from "./models/fintech/raw_customers.ts";
+import type { RawSubscription } from "./models/fintech/raw_subscriptions.ts";
+import type { RawCustomerFeature } from "./models/fintech/raw_customer_features.ts";
+import type { RawTransaction } from "./models/fintech/raw_transactions.ts";
+import type { RawRiskEvent } from "./models/fintech/raw_risk_events.ts";
 
 if (import.meta.main) {
   const startDate = new Date("2024-01-01");
@@ -35,7 +54,7 @@ if (import.meta.main) {
   try {
     // Step 1: Generate customers
     console.log("📝 Generating 10 customers...");
-    const customers = [];
+    const customers: RawCustomer[] = [];
     for (let i = 0; i < customerCount; i++) {
       const createdAt = randomDateBetween(startDate, endDate);
       customers.push(generateCustomer(createdAt, endDate));
@@ -78,7 +97,7 @@ if (import.meta.main) {
     
     // Step 3: Generate subscriptions
     console.log("📝 Generating subscriptions...");
-    const subscriptions = [];
+    const subscriptions: RawSubscription[] = [];
     for (const customer of customers) {
       const customerCreatedAt = new Date(customer.created_at);
       const currency = "USD";
@@ -103,7 +122,7 @@ if (import.meta.main) {
     
     // Step 4: Generate customer features
     console.log("📝 Generating customer features...");
-    const customerFeatures = [];
+    const customerFeatures: RawCustomerFeature[] = [];
     for (const customer of customers) {
       const customerCreatedAt = new Date(customer.created_at);
       const features = generateCustomerFeatures(
@@ -125,7 +144,7 @@ if (import.meta.main) {
     
     // Step 5: Generate transactions (limited for sample)
     console.log("📝 Generating transactions (limited for sample)...");
-    const transactions = [];
+    const transactions: RawTransaction[] = [];
     const accountsByCustomer = new Map<string, RawAccount[]>();
     
     for (const account of accounts) {
@@ -214,18 +233,6 @@ if (import.meta.main) {
     console.log("💾 Saved sample_raw_ad_spend.csv");
     console.log("");
     
-    // Step 8: Generate visitors (aggregated daily)
-    console.log("📝 Generating visitors (aggregated daily)...");
-    const visitors = generateVisitors(adSpend, sampleStartDate, sampleEndDate);
-    console.log(`✅ Generated ${visitors.length} visitor daily aggregates`);
-    
-    Deno.writeTextFileSync(
-      getOutputPath("sample_raw_visitors"),
-      visitorsToCsv(visitors)
-    );
-    console.log("💾 Saved sample_raw_visitors.csv");
-    console.log("");
-    
     console.log("✅ Sample generation complete!");
     console.log("📁 Check ./output/ directory for sample_*.csv files");
     console.log("");
@@ -237,7 +244,6 @@ if (import.meta.main) {
     console.log(`   - ${transactions.length} transactions`);
     console.log(`   - ${riskEvents.length} risk events`);
     console.log(`   - ${adSpend.length} ad spend records`);
-    console.log(`   - ${visitors.length} visitor daily aggregates`);
     console.log("");
     console.log("💡 Tip: Open these CSV files in Excel/Sheets to see the data structure!");
     

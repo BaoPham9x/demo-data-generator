@@ -71,7 +71,6 @@ module:
       calculation: "custom-ratio"
       numerator_sql: "SUM(fact_visitors.total_conversions)"
       denominator_sql: "SUM(fact_visitors.total_visitors)"
-      format: "percentage"
       category: "Marketing"
       dimensions:
         - "network"
@@ -95,7 +94,6 @@ module:
       calculation: "custom-ratio"
       numerator_sql: "SUM(fact_visitors.total_page_views)"
       denominator_sql: "SUM(fact_visitors.total_sessions)"
-      format: "number"
       category: "Marketing"
       dimensions:
         - "network"
@@ -107,25 +105,8 @@ module:
       description: "Average time spent on site per session (in seconds)."
       calculation: "custom-value"
       sql_expression: "AVG(fact_visitors.avg_time_on_site_seconds)"
-      format: "number"
       category: "Marketing"
       dimensions:
         - "network"
         - "channel"
         - "country"
-  joinPaths:
-    - from:
-        column: "visitor_date"
-      to:
-        table: "fact_ad_spend"
-        column: "created_at"
-      type: "many-to-many"
-      join_conditions:
-        - left: "fact_visitors.network"
-          right: "fact_ad_spend.network"
-        - left: "fact_visitors.channel"
-          right: "fact_ad_spend.channel"
-        - left: "fact_visitors.country"
-          right: "fact_ad_spend.country"
-        - left: "fact_visitors.campaign_name"
-          right: "fact_ad_spend.campaign_name"

@@ -2,6 +2,7 @@
   "tasks": {
     "generate": "deno run --allow-write --allow-read --allow-env src/generate.ts",
     "sample": "deno run --allow-write --allow-read --allow-env src/generate_sample.ts",
+    "targets": "deno run --allow-write --allow-read --allow-env src/generate_targets.ts",
     "clean": "rm -rf output/"
   },
   "imports": {

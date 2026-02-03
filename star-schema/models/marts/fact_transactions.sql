@@ -21,6 +21,18 @@ SELECT
     t.city,
     t.latitude,
     t.longitude,
+    -- H3 geospatial indexes for different resolutions (1-10)
+    -- H3 is a hierarchical geospatial indexing system for efficient location queries
+    t.h3_res_1,
+    t.h3_res_2,
+    t.h3_res_3,
+    t.h3_res_4,
+    t.h3_res_5,
+    t.h3_res_6,
+    t.h3_res_7,
+    t.h3_res_8,
+    t.h3_res_9,
+    t.h3_res_10,
     -- Location key for joining to dim_location in Steep (not joined in SQL)
     CASE 
         WHEN t.latitude IS NOT NULL AND t.longitude IS NOT NULL
