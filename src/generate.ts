@@ -6,10 +6,10 @@
  * 2. Accounts (references customers)
  * 3. Subscriptions (references customers)
  * 4. Customer Features (references customers)
- * 5. Balances (references accounts - time series)
- * 6. Transactions (references customers and accounts)
- * 7. Risk Events (references customers, transactions, accounts)
- * 8. Ad Spend (independent)
+ * 5. Transactions (references customers and accounts)
+ * 6. Risk Events (references customers, transactions, accounts)
+ * 7. Ad Spend (independent)
+ * 8. Visitors (references ad_spend and customers for conversion tracking)
  * 
  * Output: CSV files in ./output/ directory
  */
@@ -27,10 +27,10 @@ import { generateTransactions } from "./models/fintech/raw_transactions.ts";
 import { transactionsToCsv } from "./models/fintech/raw_transactions.ts";
 import { generateAdSpend } from "./models/fintech/raw_ad_spend.ts";
 import { adSpendToCsv } from "./models/fintech/raw_ad_spend.ts";
-import { generateAccountBalances } from "./models/fintech/raw_balances.ts";
-import { balancesToCsv } from "./models/fintech/raw_balances.ts";
 import { generateRiskEvents } from "./models/fintech/raw_risk_events.ts";
 import { riskEventsToCsv } from "./models/fintech/raw_risk_events.ts";
+import { generateVisitors } from "./models/fintech/raw_visitors.ts";
+import { visitorsToCsv } from "./models/fintech/raw_visitors.ts";
 import { randomDateBetween, randomAccountCount, randomIntBetween } from "./lib/random.ts";
 
 if (import.meta.main) {
@@ -142,37 +142,8 @@ if (import.meta.main) {
     console.log("💾 Saved raw_customer_features.csv");
     console.log("");
     
-    // Step 5: Generate balances (daily snapshots)
-    console.log("📝 Step 5/7: Generating balance snapshots...");
-    const balances = [];
-    let processedAccounts = 0;
-    for (const account of accounts) {
-      const accountCreatedAt = new Date(account.created_at);
-      const accountBalances = generateAccountBalances(
-        account.account_id,
-        accountCreatedAt,
-        account.currency,
-        account.current_balance,
-        endDate
-      );
-      balances.push(...accountBalances);
-      processedAccounts++;
-      if (processedAccounts % 1000 === 0) {
-        console.log(`   Processed ${processedAccounts}/${accounts.length} accounts (${balances.length} balance snapshots)...`);
-      }
-    }
-    console.log(`✅ Generated ${balances.length} balance snapshots`);
-    
-    // Write balances CSV
-    Deno.writeTextFileSync(
-      getOutputPath("raw_balances"),
-      balancesToCsv(balances)
-    );
-    console.log("💾 Saved raw_balances.csv");
-    console.log("");
-    
-    // Step 6: Generate transactions
-    console.log("📝 Step 5/6: Generating transactions...");
+    // Step 5: Generate transactions
+    console.log("📝 Step 5/8: Generating transactions...");
     const transactions = [];
     const accountsByCustomer = new Map<string, RawAccount[]>();
     
@@ -223,8 +194,8 @@ if (import.meta.main) {
     console.log("💾 Saved raw_transactions.csv");
     console.log("");
     
-    // Step 7: Generate risk events
-    console.log("📝 Step 7/8: Generating risk events...");
+    // Step 6: Generate risk events
+    console.log("📝 Step 6/8: Generating risk events...");
     const riskEvents = generateRiskEvents(
       customers.map(c => ({
         customer_id: c.customer_id,
@@ -255,8 +226,8 @@ if (import.meta.main) {
     console.log("💾 Saved raw_risk_events.csv");
     console.log("");
     
-    // Step 8: Generate ad spend
-    console.log("📝 Step 8/8: Generating ad spend...");
+    // Step 7: Generate ad spend
+    console.log("📝 Step 7/8: Generating ad spend...");
     const adSpend = generateAdSpend(startDate, endDate);
     console.log(`✅ Generated ${adSpend.length} ad spend records`);
     
@@ -266,6 +237,19 @@ if (import.meta.main) {
       adSpendToCsv(adSpend)
     );
     console.log("💾 Saved raw_ad_spend.csv");
+    console.log("");
+    
+    // Step 8: Generate visitors (requires ad_spend)
+    console.log("📝 Step 8/8: Generating visitors...");
+    const visitors = generateVisitors(adSpend, startDate, endDate);
+    console.log(`✅ Generated ${visitors.length} visitor sessions`);
+    
+    // Write visitors CSV
+    Deno.writeTextFileSync(
+      getOutputPath("raw_visitors"),
+      visitorsToCsv(visitors)
+    );
+    console.log("💾 Saved raw_visitors.csv");
     console.log("");
     
   } catch (error) {
@@ -282,8 +266,8 @@ if (import.meta.main) {
     console.log("   - raw_accounts.csv");
     console.log("   - raw_subscriptions.csv");
     console.log("   - raw_customer_features.csv");
-    console.log("   - raw_balances.csv");
     console.log("   - raw_transactions.csv");
     console.log("   - raw_risk_events.csv");
     console.log("   - raw_ad_spend.csv");
+    console.log("   - raw_visitors.csv");
 }

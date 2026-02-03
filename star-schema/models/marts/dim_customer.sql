@@ -1,4 +1,5 @@
 -- Dimension: Customer
+-- Create as view: CREATE OR REPLACE VIEW steep-demo.steep_demo_fintech.dim_customer AS
 SELECT
     customer_id as customer_key,
     customer_id,
@@ -31,4 +32,4 @@ SELECT
         THEN DATE_DIFF(activated_at, created_at, DAY)
         ELSE NULL
     END as time_to_activation_days
-FROM {{ source('raw', 'raw_customers') }}
+FROM `steep-demo.steep_demo_fintech.raw_customers`

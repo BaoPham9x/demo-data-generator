@@ -9,6 +9,7 @@
     "@std/csv": "jsr:@std/csv@^1.0.0",
     "d3-random": "npm:d3-random@^3.0.1",
     "d3-time": "npm:d3-time@^3.1.0",
-    "nanoid": "npm:nanoid@^5.0.9"
+    "nanoid": "npm:nanoid@^5.0.9",
+    "h3-js": "npm:h3-js@^4.1.0"
   }
 }

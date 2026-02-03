@@ -18,6 +18,14 @@ deno task generate
 
 Output: CSV files in `./output/`
 
+## Features
+
+### H3 Geospatial Indexing
+- `raw_transactions.csv` includes H3 geospatial indexes (resolutions 1-10) for transactions with location data
+- H3 is **pre-computed during data generation** to avoid BigQuery H3 function limitations
+- Only transactions with latitude/longitude (≈70% of card_spend and payment transactions) have H3 indexes
+
+
 ## Structure
 
 ```
@@ -31,6 +39,8 @@ demo-data-generator/
 ## Workflow
 
 1. **Generate** → `deno task generate` (creates CSVs)
+   - All data is generated together to maintain referential integrity
+   - Transactions include H3 indexes for location data
 2. **Load to BigQuery** → Manually upload CSVs to `demo_raw` dataset
 3. **Transform** → Run `dbt run` in `star-schema/` (creates star schema)
 4. **Semantic Layer** → Use Steep modules in `modules/` (references star schema)

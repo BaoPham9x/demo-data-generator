@@ -7,11 +7,13 @@
 
 import { stringify, type Column } from "jsr:@std/csv";
 import { generateId } from "../../lib/id.ts";
+import { getH3Indexes } from "../../lib/h3.ts";
 import {
   randomTransactionType,
   randomMerchantCategory,
   randomPaymentMethod,
   randomMerchantName,
+  randomInternalTransactionName,
   randomAmount,
   randomDateBetween,
   randomIntBetween,
@@ -39,6 +41,16 @@ export type RawTransaction = {
   city: string | null;
   latitude: number | null;
   longitude: number | null;
+  h3_res_1: string | null;
+  h3_res_2: string | null;
+  h3_res_3: string | null;
+  h3_res_4: string | null;
+  h3_res_5: string | null;
+  h3_res_6: string | null;
+  h3_res_7: string | null;
+  h3_res_8: string | null;
+  h3_res_9: string | null;
+  h3_res_10: string | null;
 };
 
 const csvColumns: Column[] = [
@@ -61,6 +73,16 @@ const csvColumns: Column[] = [
   "city",
   "latitude",
   "longitude",
+  "h3_res_1",
+  "h3_res_2",
+  "h3_res_3",
+  "h3_res_4",
+  "h3_res_5",
+  "h3_res_6",
+  "h3_res_7",
+  "h3_res_8",
+  "h3_res_9",
+  "h3_res_10",
 ];
 
 /**
@@ -217,13 +239,17 @@ function generateSingleTransaction(
     status = randomPick(["reversed", "cancelled"]);
   }
   
-  // Merchant info (for card_spend, payment types)
+  // Merchant info - all transaction types now have names
   let merchantName: string | null = null;
   let merchantCategory: string = "other";
   
   if (transactionType === "card_spend" || transactionType === "payment") {
     merchantCategory = randomMerchantCategory();
     merchantName = randomMerchantName(merchantCategory);
+  } else {
+    // Internal transactions (transfer, deposit, withdrawal, refund)
+    merchantCategory = "internal";
+    merchantName = randomInternalTransactionName(transactionType);
   }
   
   // Balance calculation
@@ -257,12 +283,35 @@ function generateSingleTransaction(
   let city: string | null = null;
   let latitude: number | null = null;
   let longitude: number | null = null;
+  let h3Res1: string | null = null;
+  let h3Res2: string | null = null;
+  let h3Res3: string | null = null;
+  let h3Res4: string | null = null;
+  let h3Res5: string | null = null;
+  let h3Res6: string | null = null;
+  let h3Res7: string | null = null;
+  let h3Res8: string | null = null;
+  let h3Res9: string | null = null;
+  let h3Res10: string | null = null;
   
   if ((transactionType === "card_spend" || transactionType === "payment") && Math.random() < 0.70) {
     const coords = randomCoordinates(country);
     city = null; // Could be populated from merchant location
     latitude = Math.round(coords.latitude * 10000) / 10000; // Round to 4 decimals
     longitude = Math.round(coords.longitude * 10000) / 10000;
+    
+    // Calculate H3 indexes for all resolutions (1-10)
+    const h3Indexes = getH3Indexes(latitude, longitude);
+    h3Res1 = h3Indexes.h3_res_1;
+    h3Res2 = h3Indexes.h3_res_2;
+    h3Res3 = h3Indexes.h3_res_3;
+    h3Res4 = h3Indexes.h3_res_4;
+    h3Res5 = h3Indexes.h3_res_5;
+    h3Res6 = h3Indexes.h3_res_6;
+    h3Res7 = h3Indexes.h3_res_7;
+    h3Res8 = h3Indexes.h3_res_8;
+    h3Res9 = h3Indexes.h3_res_9;
+    h3Res10 = h3Indexes.h3_res_10;
   }
   
   return {
@@ -285,5 +334,15 @@ function generateSingleTransaction(
     city,
     latitude,
     longitude,
+    h3_res_1: h3Res1,
+    h3_res_2: h3Res2,
+    h3_res_3: h3Res3,
+    h3_res_4: h3Res4,
+    h3_res_5: h3Res5,
+    h3_res_6: h3Res6,
+    h3_res_7: h3Res7,
+    h3_res_8: h3Res8,
+    h3_res_9: h3Res9,
+    h3_res_10: h3Res10,
   };
 }

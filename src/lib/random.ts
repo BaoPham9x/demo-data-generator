@@ -115,13 +115,13 @@ const COUNTRIES = [
   },
 ];
 
-// Registration sources
+// Registration sources (matching ad_spend networks for easier matching)
 const REGISTRATION_SOURCES = [
   { source: "organic", weight: 40 },
-  { source: "google_ads", weight: 25 },
-  { source: "meta_ads", weight: 20 },
-  { source: "youtube_ads", weight: 10 },
-  { source: "referral", weight: 5 },
+  { source: "google", weight: 25 },
+  { source: "meta", weight: 20 },
+  { source: "youtube", weight: 10 },
+  { source: "other", weight: 5 },
 ];
 
 // Account types
@@ -153,7 +153,7 @@ const TRANSACTION_TYPES = [
 // Merchant categories
 const MERCHANT_CATEGORIES = [
   "retail", "utilities", "subscriptions", "food", "travel", "entertainment",
-  "healthcare", "education", "technology", "transportation", "other",
+  "healthcare", "education", "technology", "transportation", "internal", "other",
 ];
 
 // Payment methods
@@ -387,4 +387,25 @@ export function randomMerchantName(category: string): string {
   const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
   
   return `${prefix}${categoryName} ${suffix}`;
+}
+
+/**
+ * Generate internal transaction name (for transfers, deposits, withdrawals, refunds)
+ */
+export function randomInternalTransactionName(transactionType: string): string {
+  if (transactionType === "transfer") {
+    const banks = ["Chase Bank", "Bank of America", "Wells Fargo", "Citibank", "HSBC", "Barclays", "Deutsche Bank", "BNP Paribas"];
+    return randomPick(banks) + " Transfer";
+  } else if (transactionType === "deposit") {
+    const sources = ["Bank Deposit", "Wire Transfer", "ACH Deposit", "Check Deposit", "Mobile Deposit"];
+    return randomPick(sources);
+  } else if (transactionType === "withdrawal") {
+    const locations = ["ATM Withdrawal", "Bank Branch", "Online Withdrawal", "Mobile Withdrawal"];
+    return randomPick(locations);
+  } else if (transactionType === "refund") {
+    // Refunds should reference the original merchant, but for simplicity we'll use generic
+    const refundTypes = ["Merchant Refund", "Payment Refund", "Transaction Refund"];
+    return randomPick(refundTypes);
+  }
+  return "Internal Transaction";
 }

@@ -1,4 +1,5 @@
 -- Dimension: Account
+-- Create as view: CREATE OR REPLACE VIEW steep-demo.steep_demo_fintech.dim_account AS
 SELECT
     account_id as account_key,
     account_id,
@@ -11,4 +12,4 @@ SELECT
     current_balance,
     created_at,
     balance_updated_at
-FROM {{ source('raw', 'raw_accounts') }}
+FROM `steep-demo.steep_demo_fintech.raw_accounts`
