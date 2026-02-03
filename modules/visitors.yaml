@@ -53,7 +53,7 @@ module:
         - "network"
         - "channel"
         - "country"
-    - identifier: "total_conversions"
+    - identifier: "visitor_conversions"
       name: "Total Conversions"
       time: "fact_visitors.visitor_date"
       description: "Total number of visitors who converted to registered customers."
