@@ -1,0 +1,5 @@
+module:
+  identifier: "dim_date"
+  schema: "steep_demo_fintech"
+  table: "dim_date"
+  description: ""
