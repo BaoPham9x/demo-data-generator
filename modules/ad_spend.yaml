@@ -73,3 +73,11 @@ module:
         - "network"
         - "channel"
         - "country"
+  joinPaths:
+    - from:
+        column: "visitor_key"
+      to:
+        table: "fact_visitors"
+        column: "visitor_key"
+      type: "many-to-one"
+      description: "Multiple ad spend rows can join to one aggregated visitor row per day/network/channel/country/campaign"

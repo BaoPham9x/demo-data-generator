@@ -1,6 +1,6 @@
 -- Fact: Visitors (Daily Aggregated)
 -- Daily aggregated website visitor metrics for conversion analysis
--- Can be joined to fact_ad_spend for ROI analysis
+-- Can be joined to fact_ad_spend for ROI analysis (many-to-one: multiple ad_spend rows per visitor row)
 -- Create as view: CREATE OR REPLACE VIEW steep-demo.steep_demo_fintech.fact_visitors AS
 SELECT
     v.visitor_date,
@@ -9,6 +9,16 @@ SELECT
     v.channel,
     v.country,
     v.campaign_name,
+    
+    -- Composite key for joining from fact_ad_spend (many-to-one relationship)
+    -- Format: date|network|channel|country|campaign_name
+    CONCAT(
+        v.visitor_date, '|',
+        v.network, '|',
+        v.channel, '|',
+        v.country, '|',
+        COALESCE(v.campaign_name, '')
+    ) as visitor_key,
     
     -- Aggregated metrics
     v.total_sessions,

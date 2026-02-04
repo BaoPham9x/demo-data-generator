@@ -9,6 +9,15 @@ SELECT
     a.currency,
     a.amount,
     a.conversions,
-    a.created_at
+    a.created_at,
+    -- Composite key for joining to fact_visitors (many-to-one relationship)
+    -- Format: date|network|channel|country|campaign_name
+    CONCAT(
+        CAST(DATE(a.created_at) AS STRING), '|',
+        a.network, '|',
+        a.channel, '|',
+        a.country, '|',
+        COALESCE(a.campaign_name, '')
+    ) as visitor_key
 FROM `steep-demo.steep_demo_fintech.raw_ad_spend` a
 WHERE DATE(a.created_at) <= CURRENT_DATE()
