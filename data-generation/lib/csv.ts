@@ -22,7 +22,7 @@ export function writeToCsvFile(
  */
 export function getOutputPath(filename: string): string {
   // Ensure output directory exists
-  const outputDir = "./output";
+  const outputDir = "./raw table output";
   try {
     Deno.mkdirSync(outputDir, { recursive: true });
   } catch {

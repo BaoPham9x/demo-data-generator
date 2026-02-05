@@ -1,5 +1,5 @@
 # Output files
-output/
+raw table output/
 *.csv
 
 # Deno
@@ -7,9 +7,9 @@ output/
 deno.lock
 
 # dbt
-star-schema/target/
-star-schema/dbt_packages/
-star-schema/profiles.yml
+Star schema for big query/target/
+Star schema for big query/dbt_packages/
+Star schema for big query/profiles.yml
 
 # IDE
 .vscode/
@@ -23,3 +23,5 @@ Thumbs.db
 
 # Config (contains secrets)
 config.json
+.env
+alerts-prototype/.api-key

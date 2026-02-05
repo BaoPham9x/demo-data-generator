@@ -1,23 +1,26 @@
 /**
- * Main data generation script
- * 
- * Generates all raw tables as CSV files in the correct order to maintain referential integrity:
- * 1. Customers (foundation)
- * 2. Accounts (references customers)
- * 3. Subscriptions (references customers)
- * 4. Customer Features (references customers)
- * 5. Transactions (references customers and accounts)
- * 6. Risk Events (references customers, transactions, accounts)
- * 7. Ad Spend (independent)
- * 8. Visitors (references ad_spend and customers for conversion tracking)
- * 
- * Output: CSV files in ./output/ directory
+ * Generate a small sample of data to show example rows
+ * This generates just 10 customers to see what the data looks like
  */
 
+// @deno-types="deno:///types.d.ts"
 import { getOutputPath } from "./lib/csv.ts";
+
+// Type declarations for Deno globals
+declare const Deno: {
+  writeTextFileSync(path: string, data: string): void;
+  exit(code: number): never;
+};
+
+// Extend ImportMeta for Deno
+declare global {
+  interface ImportMeta {
+    main: boolean;
+  }
+}
 import { generateCustomer } from "./models/fintech/raw_customers.ts";
 import { customersToCsv } from "./models/fintech/raw_customers.ts";
-import { generateAccount, type RawAccount } from "./models/fintech/raw_accounts.ts";
+import { generateAccount } from "./models/fintech/raw_accounts.ts";
 import { accountsToCsv } from "./models/fintech/raw_accounts.ts";
 import { generateSubscription } from "./models/fintech/raw_subscriptions.ts";
 import { subscriptionsToCsv } from "./models/fintech/raw_subscriptions.ts";
@@ -27,52 +30,52 @@ import { generateTransactions } from "./models/fintech/raw_transactions.ts";
 import { transactionsToCsv } from "./models/fintech/raw_transactions.ts";
 import { generateAdSpend } from "./models/fintech/raw_ad_spend.ts";
 import { adSpendToCsv } from "./models/fintech/raw_ad_spend.ts";
-import { generateRiskEvents } from "./models/fintech/raw_risk_events.ts";
-import { riskEventsToCsv } from "./models/fintech/raw_risk_events.ts";
 import { generateVisitors } from "./models/fintech/raw_visitors.ts";
 import { visitorsToCsv } from "./models/fintech/raw_visitors.ts";
-import { randomDateBetween, randomAccountCount, randomIntBetween } from "./lib/random.ts";
+import { generateRiskEvents } from "./models/fintech/raw_risk_events.ts";
+import { riskEventsToCsv } from "./models/fintech/raw_risk_events.ts";
+import { randomDateBetween, randomAccountCount } from "./lib/random.ts";
+import type { RawAccount } from "./models/fintech/raw_accounts.ts";
+import type { RawCustomer } from "./models/fintech/raw_customers.ts";
+import type { RawSubscription } from "./models/fintech/raw_subscriptions.ts";
+import type { RawCustomerFeature } from "./models/fintech/raw_customer_features.ts";
+import type { RawTransaction } from "./models/fintech/raw_transactions.ts";
+import type { RawRiskEvent } from "./models/fintech/raw_risk_events.ts";
 
 if (import.meta.main) {
   const startDate = new Date("2024-01-01");
-  const endDate = new Date("2026-12-31");
-  const customerCount = 5000;
+  const endDate = new Date("2024-03-31"); // Just 3 months for sample
+  const customerCount = 10; // Small sample
   
-  console.log("🚀 Starting demo data generation...");
+  console.log("🎯 Generating SAMPLE data (10 customers, 3 months)...");
   console.log(`📅 Date range: ${startDate.toISOString().split('T')[0]} to ${endDate.toISOString().split('T')[0]}`);
-  console.log(`👥 Generating ${customerCount} customers...`);
   console.log("");
   
   try {
     // Step 1: Generate customers
-    console.log("📝 Step 1/6: Generating customers...");
-    const customers = [];
+    console.log("📝 Generating 10 customers...");
+    const customers: RawCustomer[] = [];
     for (let i = 0; i < customerCount; i++) {
       const createdAt = randomDateBetween(startDate, endDate);
       customers.push(generateCustomer(createdAt, endDate));
-      if ((i + 1) % 500 === 0) {
-        console.log(`   Generated ${i + 1}/${customerCount} customers...`);
-      }
     }
     console.log(`✅ Generated ${customers.length} customers`);
     
     // Write customers CSV
     Deno.writeTextFileSync(
-      getOutputPath("raw_customers"),
+      getOutputPath("sample_raw_customers"),
       customersToCsv(customers)
     );
-    console.log("💾 Saved raw_customers.csv");
+    console.log("💾 Saved sample_raw_customers.csv");
     console.log("");
     
     // Step 2: Generate accounts
-    console.log("📝 Step 2/6: Generating accounts...");
-    const accounts = [];
+    console.log("📝 Generating accounts...");
+    const accounts: RawAccount[] = [];
     for (const customer of customers) {
       const accountCount = randomAccountCount();
       const customerCreatedAt = new Date(customer.created_at);
-      
-      // Get customer currency from country (simplified - using US for now, can enhance)
-      const currency = "USD"; // TODO: Map from country
+      const currency = "USD"; // Simplified for sample
       
       for (let i = 0; i < accountCount; i++) {
         accounts.push(generateAccount(
@@ -85,20 +88,19 @@ if (import.meta.main) {
     }
     console.log(`✅ Generated ${accounts.length} accounts`);
     
-    // Write accounts CSV
     Deno.writeTextFileSync(
-      getOutputPath("raw_accounts"),
+      getOutputPath("sample_raw_accounts"),
       accountsToCsv(accounts)
     );
-    console.log("💾 Saved raw_accounts.csv");
+    console.log("💾 Saved sample_raw_accounts.csv");
     console.log("");
     
     // Step 3: Generate subscriptions
-    console.log("📝 Step 3/6: Generating subscriptions...");
-    const subscriptions = [];
+    console.log("📝 Generating subscriptions...");
+    const subscriptions: RawSubscription[] = [];
     for (const customer of customers) {
       const customerCreatedAt = new Date(customer.created_at);
-      const currency = "USD"; // TODO: Map from country
+      const currency = "USD";
       const subscription = generateSubscription(
         customer.customer_id,
         customerCreatedAt,
@@ -111,17 +113,16 @@ if (import.meta.main) {
     }
     console.log(`✅ Generated ${subscriptions.length} subscriptions`);
     
-    // Write subscriptions CSV
     Deno.writeTextFileSync(
-      getOutputPath("raw_subscriptions"),
+      getOutputPath("sample_raw_subscriptions"),
       subscriptionsToCsv(subscriptions)
     );
-    console.log("💾 Saved raw_subscriptions.csv");
+    console.log("💾 Saved sample_raw_subscriptions.csv");
     console.log("");
     
     // Step 4: Generate customer features
-    console.log("📝 Step 4/6: Generating customer features...");
-    const customerFeatures = [];
+    console.log("📝 Generating customer features...");
+    const customerFeatures: RawCustomerFeature[] = [];
     for (const customer of customers) {
       const customerCreatedAt = new Date(customer.created_at);
       const features = generateCustomerFeatures(
@@ -134,20 +135,18 @@ if (import.meta.main) {
     }
     console.log(`✅ Generated ${customerFeatures.length} customer features`);
     
-    // Write customer features CSV
     Deno.writeTextFileSync(
-      getOutputPath("raw_customer_features"),
+      getOutputPath("sample_raw_customer_features"),
       customerFeaturesToCsv(customerFeatures)
     );
-    console.log("💾 Saved raw_customer_features.csv");
+    console.log("💾 Saved sample_raw_customer_features.csv");
     console.log("");
     
-    // Step 5: Generate transactions
-    console.log("📝 Step 5/8: Generating transactions...");
-    const transactions = [];
+    // Step 5: Generate transactions (limited for sample)
+    console.log("📝 Generating transactions (limited for sample)...");
+    const transactions: RawTransaction[] = [];
     const accountsByCustomer = new Map<string, RawAccount[]>();
     
-    // Group accounts by customer
     for (const account of accounts) {
       if (!accountsByCustomer.has(account.customer_id)) {
         accountsByCustomer.set(account.customer_id, []);
@@ -156,7 +155,6 @@ if (import.meta.main) {
       customerAccounts.push(account);
     }
     
-    let processedCustomers = 0;
     for (const customer of customers) {
       const customerAccounts = accountsByCustomer.get(customer.customer_id) || [];
       if (customerAccounts.length === 0) continue;
@@ -164,8 +162,9 @@ if (import.meta.main) {
       const accountIds = customerAccounts.map(a => a.account_id);
       const customerCreatedAt = new Date(customer.created_at);
       const activatedAt = customer.activated_at ? new Date(customer.activated_at) : null;
-      const currency = "USD"; // TODO: Map from country
+      const currency = "USD";
       
+      // Limit transactions for sample (max 20 per customer)
       const customerTransactions = generateTransactions(
         customer.customer_id,
         accountIds,
@@ -177,25 +176,20 @@ if (import.meta.main) {
         customer.customer_tier
       );
       
-      transactions.push(...customerTransactions);
-      processedCustomers++;
-      
-      if (processedCustomers % 500 === 0) {
-        console.log(`   Processed ${processedCustomers}/${customers.length} customers (${transactions.length} transactions so far)...`);
-      }
+      // Limit to first 20 transactions per customer for sample
+      transactions.push(...customerTransactions.slice(0, 20));
     }
-    console.log(`✅ Generated ${transactions.length} transactions`);
+    console.log(`✅ Generated ${transactions.length} transactions (limited for sample)`);
     
-    // Write transactions CSV
     Deno.writeTextFileSync(
-      getOutputPath("raw_transactions"),
+      getOutputPath("sample_raw_transactions"),
       transactionsToCsv(transactions)
     );
-    console.log("💾 Saved raw_transactions.csv");
+    console.log("💾 Saved sample_raw_transactions.csv");
     console.log("");
     
-    // Step 6: Generate risk events
-    console.log("📝 Step 6/8: Generating risk events...");
+    // Step 6: Generate risk events (limited for sample)
+    console.log("📝 Generating risk events (limited for sample)...");
     const riskEvents = generateRiskEvents(
       customers.map(c => ({
         customer_id: c.customer_id,
@@ -218,56 +212,44 @@ if (import.meta.main) {
     );
     console.log(`✅ Generated ${riskEvents.length} risk events`);
     
-    // Write risk events CSV
     Deno.writeTextFileSync(
-      getOutputPath("raw_risk_events"),
+      getOutputPath("sample_raw_risk_events"),
       riskEventsToCsv(riskEvents)
     );
-    console.log("💾 Saved raw_risk_events.csv");
+    console.log("💾 Saved sample_raw_risk_events.csv");
     console.log("");
     
-    // Step 7: Generate ad spend
-    console.log("📝 Step 7/8: Generating ad spend...");
-    const adSpend = generateAdSpend(startDate, endDate);
+    // Step 7: Generate ad spend (just 1 month for sample)
+    console.log("📝 Generating ad spend (1 month sample)...");
+    const sampleStartDate = new Date("2024-01-01");
+    const sampleEndDate = new Date("2024-01-31");
+    const adSpend = generateAdSpend(sampleStartDate, sampleEndDate);
     console.log(`✅ Generated ${adSpend.length} ad spend records`);
     
-    // Write ad spend CSV
     Deno.writeTextFileSync(
-      getOutputPath("raw_ad_spend"),
+      getOutputPath("sample_raw_ad_spend"),
       adSpendToCsv(adSpend)
     );
-    console.log("💾 Saved raw_ad_spend.csv");
+    console.log("💾 Saved sample_raw_ad_spend.csv");
     console.log("");
     
-    // Step 8: Generate visitors (requires ad_spend)
-    console.log("📝 Step 8/8: Generating visitors...");
-    const visitors = generateVisitors(adSpend, startDate, endDate);
-    console.log(`✅ Generated ${visitors.length} visitor sessions`);
-    
-    // Write visitors CSV
-    Deno.writeTextFileSync(
-      getOutputPath("raw_visitors"),
-      visitorsToCsv(visitors)
-    );
-    console.log("💾 Saved raw_visitors.csv");
+    console.log("✅ Sample generation complete!");
+    console.log("📁 Check ./raw table output/ directory for sample_*.csv files");
     console.log("");
+    console.log("📊 Sample Summary:");
+    console.log(`   - ${customers.length} customers`);
+    console.log(`   - ${accounts.length} accounts`);
+    console.log(`   - ${subscriptions.length} subscriptions`);
+    console.log(`   - ${customerFeatures.length} customer features`);
+    console.log(`   - ${transactions.length} transactions`);
+    console.log(`   - ${riskEvents.length} risk events`);
+    console.log(`   - ${adSpend.length} ad spend records`);
+    console.log("");
+    console.log("💡 Tip: Open these CSV files in Excel/Sheets to see the data structure!");
     
   } catch (error) {
     console.error("❌ Error during generation:", error);
     console.error(error.stack);
     Deno.exit(1);
   }
-  
-  console.log("✅ Generation complete!");
-  console.log("📁 Check ./output/ directory for CSV files");
-  console.log("");
-    console.log("📊 Summary:");
-    console.log("   - raw_customers.csv");
-    console.log("   - raw_accounts.csv");
-    console.log("   - raw_subscriptions.csv");
-    console.log("   - raw_customer_features.csv");
-    console.log("   - raw_transactions.csv");
-    console.log("   - raw_risk_events.csv");
-    console.log("   - raw_ad_spend.csv");
-    console.log("   - raw_visitors.csv");
 }

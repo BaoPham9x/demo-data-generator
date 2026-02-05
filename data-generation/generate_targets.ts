@@ -295,7 +295,7 @@ function generateMonthlyTargets(): TargetRow[] {
 const targets = generateMonthlyTargets();
 const csv = stringify(targets, { columns: csvColumns, headers: true });
 
-Deno.writeTextFileSync("output/targets.csv", csv);
+Deno.writeTextFileSync("raw table output/targets.csv", csv);
 
 console.log(`✅ Generated targets.csv with ${targets.length} rows`);
 console.log(`   - 24 months (Jan 2025 - Dec 2026)`);
