@@ -10,9 +10,6 @@ deno task generate
 
 # Or small sample for testing
 deno task sample
-
-# Launch metric alerts GUI
-deno task alerts-gui
 ```
 
 ## 📁 What's Inside
@@ -21,14 +18,11 @@ deno task alerts-gui
 - **`raw table output/`** - Generated CSV files ready for BigQuery
 - **`star-schema-for-big-query/`** - dbt models to transform raw data into star schema
 - **`modules/`** - Steep semantic layer YAML files (metrics & dimensions)
-- **`alerts-prototype/`** - Web-based alert system for monitoring Steep metrics
 
 ## 🛠️ Commands
 
 - `deno task generate` - Full dataset (5K customers, 2M+ transactions)
 - `deno task sample` - Small sample (10 customers, 3 months)
-- `deno task alerts-gui` - Launch alerts web interface
-- `deno task check-alerts` - Run alerts from CLI
 - `deno task clean` - Delete all CSV files
 
 ## 📊 Generated Data

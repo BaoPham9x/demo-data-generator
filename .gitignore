@@ -24,4 +24,3 @@ Thumbs.db
 # Config (contains secrets)
 config.json
 .env
-alerts-prototype/.api-key
