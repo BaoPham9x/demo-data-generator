@@ -1,6 +1,6 @@
 module:
   identifier: "subscriptions"
-  schema: "steep_demo_fintech"
+  schema: "steep_demo_v2"
   table: "fact_subscriptions"
   dimensions:
     - column: "billing_cycle"
@@ -20,13 +20,32 @@ module:
       name: "Avg Monthly Price"
       time: "fact_subscriptions.started_at"
       description: "The average monthly subscription price across all active subscriptions. This helps us understand pricing trends and the typical revenue per subscription."
+      time_grains:
+        - "monthly"
+        - "quarterly"
+        - "yearly"
       calculation: "custom-value"
       sql_expression: "AVG(fact_subscriptions.monthly_price)"
+      owner_emails:
+        - "deanne@steep.app"
       filters:
         - column: "status"
           operator: "equals"
           expression: "active"
       category: "Commercial"
       dimensions:
+        - "currency"
+        - "status"
+        - "dim_customer.first_name"
+        - "dim_customer.last_name"
+        - "dim_customer.email"
+        - "dim_customer.country"
+        - "dim_customer.city"
+        - "dim_customer.region"
+        - "dim_customer.timezone"
+        - "dim_customer.registration_source"
+        - "dim_customer.kyb_status"
+        - "dim_customer.customer_tier"
+        - "dim_customer.account_status"
         - "plan_name"
         - "billing_cycle"

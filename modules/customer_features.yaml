@@ -1,6 +1,6 @@
 module:
   identifier: "customer_features"
-  schema: "steep_demo_fintech"
+  schema: "steep_demo_v2"
   table: "fact_customer_features"
   dimensions:
     - column: "feature_category"

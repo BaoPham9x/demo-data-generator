@@ -1,6 +1,6 @@
 -- Dimension: Date
 -- Generate date dimension for 2024-01-01 to 2026-12-31
--- Create as view: CREATE OR REPLACE VIEW steep-demo.steep_demo_fintech.dim_date AS
+-- Create as view: CREATE OR REPLACE VIEW steep-demo.steep_demo_v2.dim_date AS
 WITH date_spine AS (
     SELECT date_day
     FROM UNNEST(GENERATE_DATE_ARRAY('2024-01-01', '2026-12-31')) AS date_day

@@ -1,5 +1,5 @@
 -- Dimension: Customer
--- Create as view: CREATE OR REPLACE VIEW steep-demo.steep_demo_fintech.dim_customer AS
+-- Create as view: CREATE OR REPLACE VIEW steep-demo.steep_demo_v2.dim_customer AS
 SELECT
     customer_id as customer_key,
     customer_id,
@@ -32,4 +32,6 @@ SELECT
         THEN DATE_DIFF(activated_at, created_at, DAY)
         ELSE NULL
     END as time_to_activation_days
-FROM `steep-demo.steep_demo_fintech.raw_customers`
+FROM `steep-demo.steep_demo_v2.raw_customers`
+WHERE DATE(created_at) <= CURRENT_DATE()
+  AND (activated_at IS NULL OR DATE(activated_at) <= CURRENT_DATE())

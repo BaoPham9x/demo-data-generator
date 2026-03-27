@@ -1,6 +1,6 @@
 module:
   identifier: "customers"
-  schema: "steep_demo_fintech"
+  schema: "steep_demo_v2"
   table: "dim_customer"
   label: "Dim Customer"
   description: ""
@@ -44,12 +44,21 @@ module:
       time: "dim_customer.created_at"
       description: "Count of customers who have completed at least one transaction. This indicates how many customers have moved beyond just signing up and are actively using the platform."
       calculation: "count"
+      owner_emails:
+        - "deanne@steep.app"
       filters:
         - column: "is_activated"
           operator: "equals"
           expression: "1"
       category: "Commercial"
       dimensions:
+        - "first_name"
+        - "last_name"
+        - "account_status"
+        - "kyb_status"
+        - "email"
+        - "city"
+        - "region"
         - "country"
         - "customer_tier"
         - "registration_source"
@@ -61,6 +70,8 @@ module:
       numerator_sql: "SUM(CASE WHEN dim_customer.is_activated = 1 THEN 1 END)"
       denominator_sql: "COUNT(*)"
       format: "percentage"
+      owner_emails:
+        - "deanne@steep.app"
       category: "Commercial"
       dimensions:
         - "last_name"
@@ -79,6 +90,8 @@ module:
       description: "Average number of days it takes for customers to complete the Know Your Customer (KYC) verification process from start to approval. Lower is better - indicates a smoother onboarding experience."
       calculation: "custom-value"
       sql_expression: "AVG(dim_customer.kyb_completion_days)"
+      owner_emails:
+        - "deanne@steep.app"
       category: "Operations"
       dimensions:
         - "country"
@@ -89,6 +102,8 @@ module:
       description: "Average number of days between when a customer signs up and when they make their first transaction. This measures how quickly new customers start using our service."
       calculation: "custom-value"
       sql_expression: "AVG(dim_customer.time_to_activation_days)"
+      owner_emails:
+        - "deanne@steep.app"
       category: "Operations"
       dimensions:
         - "country"
@@ -111,6 +126,9 @@ module:
             expression: "Europe"
       category: "Commercial"
       dimensions:
+        - "account_status"
+        - "timezone"
+        - "email"
         - "country"
         - "city"
         - "region"

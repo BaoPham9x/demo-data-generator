@@ -1,5 +1,5 @@
 -- Fact: Risk Events
--- Create as view: CREATE OR REPLACE VIEW steep-demo.steep_demo_fintech.fact_risk_events AS
+-- Create as view: CREATE OR REPLACE VIEW steep-demo.steep_demo_v2.fact_risk_events AS
 SELECT
     r.risk_event_id,
     dc.customer_key,
@@ -17,9 +17,9 @@ SELECT
         ELSE NULL
     END as resolution_time_hours,
     r.description
-FROM `steep-demo.steep_demo_fintech.raw_risk_events` r
-LEFT JOIN `steep-demo.steep_demo_fintech.dim_customer` dc ON r.customer_id = dc.customer_id
-LEFT JOIN `steep-demo.steep_demo_fintech.dim_risk_event_type` dr ON r.event_type = dr.risk_event_type_key
-LEFT JOIN `steep-demo.steep_demo_fintech.fact_transactions` dt ON r.transaction_id = dt.transaction_id
-LEFT JOIN `steep-demo.steep_demo_fintech.dim_account` da ON r.account_id = da.account_id
+FROM `steep-demo.steep_demo_v2.raw_risk_events` r
+LEFT JOIN `steep-demo.steep_demo_v2.dim_customer` dc ON r.customer_id = dc.customer_id
+LEFT JOIN `steep-demo.steep_demo_v2.dim_risk_event_type` dr ON r.event_type = dr.risk_event_type_key
+LEFT JOIN `steep-demo.steep_demo_v2.fact_transactions` dt ON r.transaction_id = dt.transaction_id
+LEFT JOIN `steep-demo.steep_demo_v2.dim_account` da ON r.account_id = da.account_id
 WHERE DATE(r.created_at) <= CURRENT_DATE()

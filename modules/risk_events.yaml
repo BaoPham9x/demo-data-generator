@@ -1,6 +1,6 @@
 module:
   identifier: "risk_events"
-  schema: "steep_demo_fintech"
+  schema: "steep_demo_v2"
   table: "fact_risk_events"
   dimensions:
     - column: "event_type"
@@ -12,6 +12,12 @@ module:
     - column: "status"
       type: "categorical"
       label: "Status"
+    - column: "description"
+      type: "categorical"
+      label: "Description"
+    - column: "risk_event_type_key"
+      type: "categorical"
+      label: "Risk event type key"
   metrics:
     - identifier: "avg_resolution_time"
       name: "Avg Resolution Time (Hours)"
@@ -19,6 +25,8 @@ module:
       description: "Average time to resolve risk events in hours."
       calculation: "custom-value"
       sql_expression: "AVG(fact_risk_events.resolution_time_hours)"
+      owner_emails:
+        - "deanne@steep.app"
       category: "Operations"
       dimensions:
         - "event_type"

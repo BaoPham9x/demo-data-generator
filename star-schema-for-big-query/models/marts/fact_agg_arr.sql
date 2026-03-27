@@ -1,7 +1,7 @@
 -- Fact: Aggregated ARR (Annual Recurring Revenue)
 -- Monthly snapshots of ARR per subscription
 -- This creates a time-series fact table with one row per subscription per month
--- Create as view: CREATE OR REPLACE VIEW steep-demo.steep_demo_fintech.fact_agg_arr AS
+-- Create as view: CREATE OR REPLACE VIEW steep-demo.steep_demo_v2.fact_agg_arr AS
 
 WITH 
 -- Generate monthly date spine (first day of each month)
@@ -33,8 +33,8 @@ subscriptions AS (
     DATE(s.ended_at) as ended_date,
     s.started_at,
     s.ended_at
-  FROM `steep-demo.steep_demo_fintech.raw_subscriptions` s
-  LEFT JOIN `steep-demo.steep_demo_fintech.dim_customer` dc ON s.customer_id = dc.customer_id
+  FROM `steep-demo.steep_demo_v2.raw_subscriptions` s
+  LEFT JOIN `steep-demo.steep_demo_v2.dim_customer` dc ON s.customer_id = dc.customer_id
 ),
 
 -- Cross join subscriptions with monthly dates to create snapshots

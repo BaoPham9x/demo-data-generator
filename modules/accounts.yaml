@@ -1,6 +1,6 @@
 module:
   identifier: "accounts"
-  schema: "steep_demo_fintech"
+  schema: "steep_demo_v2"
   table: "dim_account"
   label: "Dim Accounts"
   description: ""
@@ -13,7 +13,7 @@ module:
       label: "Account Status"
     - column: "currency"
       type: "categorical"
-      label: "Currency"
+      label: "Currency- test Ooono"
   metrics:
     - identifier: "avg_credit_limit"
       name: "Avg Credit Limit"
@@ -21,8 +21,11 @@ module:
       description: "The average credit limit assigned to accounts. This shows typical credit limits and helps us understand our credit risk exposure and customer creditworthiness."
       calculation: "custom-value"
       sql_expression: "AVG(dim_account.credit_limit)"
+      owner_emails:
+        - "deanne@steep.app"
       category: "Operations"
       dimensions:
+        - "dim_customer.city"
         - "account_type"
         - "currency"
   joinPaths:
